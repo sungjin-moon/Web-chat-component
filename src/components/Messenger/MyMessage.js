@@ -1,16 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const MyMessage = () => {
+const MyMessage = ({ _setIsOpened }) => {
   return (
     <Box>
-      <UserImg />
       <Wrapper>
         <Text>
-          Hey, can I connect with someone about pricing for Enterprise plans?
+          Hi Emily, Dan here from the Enterprise accounts team. How can I help?
         </Text>
         <Date>9m</Date>
       </Wrapper>
+      <div className="wrapper">
+        <UserImg onClick={() => _setIsOpened(true)} />
+      </div>
     </Box>
   );
 };
@@ -18,20 +20,27 @@ const MyMessage = () => {
 const Box = styled.div`
   margin-bottom: 20px;
   display: flex;
+  justify-content: flex-end;
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
 `;
 
 const UserImg = styled.div`
-  border: solid 3px #f2cb30;
+  cursor: pointer;
+  border: solid 3px #3e56f2;
   border-radius: 50%;
   width: 30px;
   height: 30px;
-  margin-top: 10px;
-  background-color: #f9d954;
+  margin-bottom: 10px;
+  background-color: #5266f7;
 `;
 
 const Wrapper = styled.div`
-  margin-left: 10px;
-`
+  margin-right: 10px;
+`;
 
 const Text = styled.div`
   font-size: 14px;
@@ -39,13 +48,13 @@ const Text = styled.div`
   max-width: 270px;
   padding: 15px;
   border-radius: 5px;
-
 `;
 
 const Date = styled.div`
   color: gray;
   font-size: 12px;
   margin-top: 3px;
-`
+  text-align: end;
+`;
 
 export default MyMessage;

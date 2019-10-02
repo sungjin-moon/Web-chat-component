@@ -1,19 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
-import MyMessage from './MyMessage';
 import YourMessage from './YourMessage';
+import MyMessage from './MyMessage';
 
-const Chatbox = () => {
+const Chatbox = ({ toggle, isOpened, _setIsOpened }) => {
   return (
-    <Container>
+    <Container toggle={toggle} isOpened={isOpened}>
       <Head>Emily Gilmore</Head>
       <Body>
-        <MyMessage />
-        <YourMessage />
-        <MyMessage />
-        <YourMessage />
-        <MyMessage />
-        <YourMessage />
+        <YourMessage _setIsOpened={_setIsOpened} />
+        <MyMessage _setIsOpened={_setIsOpened} />
+        <YourMessage _setIsOpened={_setIsOpened} />
+        <MyMessage _setIsOpened={_setIsOpened} />
       </Body>
       <Bottom>
         <UserInput>
@@ -33,12 +31,17 @@ const Chatbox = () => {
 };
 
 const Container = styled.div`
+  opacity: ${({ toggle }) => (toggle ? 1 : 0)};
   box-shadow: 0 7px 15px #999;
   position: absolute;
-  bottom: 140px;
-  right: 135px;
+  bottom: 122px;
+  right: 100px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  z-index: 5;
+  transition: transform 1s;
+  transform: ${({ isOpened }) =>
+    isOpened ? 'translateX(-100px) scale(0.9)' : 'translateX (0px) scale(1)'};
 `;
 
 const Head = styled.div`
@@ -55,7 +58,7 @@ const Body = styled.div`
   background-color: white;
   padding: 20px;
   overflow-y: scroll;
-  width: 400px;
+  width: 450px;
   &::-webkit-scrollbar {
     display: none !important;
   }

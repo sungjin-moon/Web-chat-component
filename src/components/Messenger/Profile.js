@@ -1,52 +1,150 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Profile = () => {
+const Profile = ({ isOpened }) => {
   return (
-    <Container>
-      <Wrapper>
-        <User>
-          <div>
-            <div className="profile-userImg"></div>
-          </div>
-          <div>Emily Gilmore</div>
-          <button>User</button>
-        </User>
-      </Wrapper>
+    <Container isOpened={isOpened}>
+      <div className="profile-close">
+        <Close>X</Close>
+      </div>
+      <User>
+        <div>
+          <UserImg border="#f2cb30" background="#f9d954" line="3px" />
+        </div>
+        <div>Emily Gilmore</div>
+        <button>User</button>
+      </User>
+      <Latest>
+        <div>Latest Conversations</div>
+        <div className="latest-wrapper">
+          <UserImg
+            width="20px"
+            height="20px"
+            border="#3e56f2"
+            background="#5266f7"
+            line="2px"
+          />
+          <div>fasfasfasf</div>
+        </div>
+        <div className="latest-wrapper">
+          <UserImg
+            width="20px"
+            height="20px"
+            border="red"
+            background="#f74747"
+            line="2px"
+          />
+          <div>qwfasasg</div>
+        </div>
+      </Latest>
+      <Details>
+        <div>Details</div>
+        <div>
+          <span className="details-label">Location</span>
+          <span>London</span>
+        </div>
+        <div>
+          <span className="details-label">Industy</span>
+          <span>Education</span>
+        </div>
+        <div>
+          <span className="details-label">Company Size</span>
+          <span>>100</span>
+        </div>
+      </Details>
     </Container>
   );
 };
 
 const Container = styled.div`
+  opacity: ${({ isOpened }) => (isOpened ? 1 : 0)};
+  .profile-close {
+    text-align: end;
+    padding: 10px;
+  }
   box-shadow: 0 7px 15px #999;
   border-radius: 10px;
   position: absolute;
-  bottom: 115px;
+  bottom: 120px;
   right: 40px;
-  width: 270px;
-  height: 585px;
   background-color: white;
+  z-index: 5;
+  transition: transform 1s;
+  transform: ${({ isOpened }) =>
+    isOpened ? 'transform: translateX(0px)' : 'translateX(320px)'};
 `;
 
-const Wrapper = styled.div`
-  border-bottom: solid 1px #ddd;
-  height: 200px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
+const Close = styled.span`
+  cursor: pointer;
+`;
 
 const User = styled.div`
-  border: solid 1px;
+  border-bottom: solid 1px #ddd;
   text-align: center;
-  width: 200px;
-  .profile-userImg {
-    display: inline-block;
-    border: solid 5px #f2cb30;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    background-color: #f9d954;
+  padding: 30px;
+  width: 270px;
+  div {
+    :nth-child(2) {
+      font-weight: normal;
+      font-size: 18px;
+      margin: 10px 0px;
+    }
+  }
+  button {
+    cursor: pointer;
+    background-color: white;
+    outline: none;
+    border: solid 1px gray;
+    border-radius: 3px;
+    padding: 3px 10px;
+    color: gray;
+  }
+`;
+
+const UserImg = styled.div`
+  display: inline-block;
+  border: solid ${({ line }) => line} ${({ border }) => border};
+  border-radius: 50%;
+  width: ${({ width }) => (width ? width : '50px')};
+  height: ${({ height }) => (height ? height : '50px')};
+  background-color: ${({ background }) => background};
+  margin: 0;
+`;
+
+const Latest = styled.div`
+  padding: 20px;
+  border-bottom: solid 1px #ddd;
+  height: 150px;
+  div:first-child {
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .latest-wrapper {
+    display: flex;
+    margin-top: 10px;
+    font-size: 14px;
+    div:last-child {
+      margin-left: 5px;
+    }
+  }
+`;
+
+const Details = styled.div`
+  padding: 20px;
+  font-size: 14px;
+  height: 280px;
+  div {
+    margin-bottom: 10px;
+    :last-child {
+      margin: 0;
+    }
+    :first-child {
+      font-weight: 500;
+    }
+  }
+  .details-label {
+    color: gray;
+    margin-right: 10px;
   }
 `;
 
