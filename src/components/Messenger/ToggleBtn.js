@@ -1,13 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ToggleBtn = ({toggle, _setToggle}) => {
+function ToggleBtn({ chatboxOpened, _toggle }) {
   return (
-    <Button onClick={() => _setToggle(!toggle)}>
+    <Button onClick={() => _toggle(chatboxOpened)}>
       <i className="fas fa-sticky-note"></i>
     </Button>
   );
-};
+}
 
 const Button = styled.div`
   box-shadow: 0 7px 15px #999;

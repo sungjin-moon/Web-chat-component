@@ -3,15 +3,15 @@ import styled from 'styled-components';
 import YourMessage from './YourMessage';
 import MyMessage from './MyMessage';
 
-const Chatbox = ({ toggle, isOpened, _setIsOpened }) => {
+function Chatbox({ chatboxOpened, profileOpened, _setProfile }) {
   return (
-    <Container toggle={toggle} isOpened={isOpened}>
+    <Container chatboxOpened={chatboxOpened} profileOpened={profileOpened}>
       <Head>Emily Gilmore</Head>
       <Body>
-        <YourMessage _setIsOpened={_setIsOpened} />
-        <MyMessage _setIsOpened={_setIsOpened} />
-        <YourMessage _setIsOpened={_setIsOpened} />
-        <MyMessage _setIsOpened={_setIsOpened} />
+        <YourMessage _setProfile={_setProfile} />
+        <MyMessage _setProfile={_setProfile} />
+        <YourMessage _setProfile={_setProfile} />
+        <MyMessage _setProfile={_setProfile} />
       </Body>
       <Bottom>
         <UserInput>
@@ -28,10 +28,10 @@ const Chatbox = ({ toggle, isOpened, _setIsOpened }) => {
       </Bottom>
     </Container>
   );
-};
+}
 
 const Container = styled.div`
-  opacity: ${({ toggle }) => (toggle ? 1 : 0)};
+  opacity: ${({ chatboxOpened }) => (chatboxOpened ? 1 : 0)};
   box-shadow: 0 7px 15px #999;
   position: absolute;
   bottom: 122px;
@@ -39,9 +39,9 @@ const Container = styled.div`
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   z-index: 5;
-  transition: transform 1s;
-  transform: ${({ isOpened }) =>
-    isOpened ? 'translateX(-100px) scale(0.9)' : 'translateX (0px) scale(1)'};
+  transition: opacity 0.15s linear, transform 1s;
+  transform: ${({ profileOpened }) =>
+    profileOpened ? 'translateX(-100px) scale(0.9)' : 'translateX (0px) scale(1)'};
 `;
 
 const Head = styled.div`

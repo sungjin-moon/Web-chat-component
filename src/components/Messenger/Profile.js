@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Profile = ({ isOpened }) => {
+function Profile({ profileOpened, _setProfile }) {
   return (
-    <Container isOpened={isOpened}>
+    <Container profileOpened={profileOpened}>
       <div className="profile-close">
-        <Close>X</Close>
+        <Close onClick={() => _setProfile(false)}>X</Close>
       </div>
       <User>
         <div>
@@ -57,7 +57,7 @@ const Profile = ({ isOpened }) => {
 };
 
 const Container = styled.div`
-  opacity: ${({ isOpened }) => (isOpened ? 1 : 0)};
+  opacity: ${({ profileOpened }) => (profileOpened ? 1 : 0)};
   .profile-close {
     text-align: end;
     padding: 10px;
@@ -69,9 +69,9 @@ const Container = styled.div`
   right: 40px;
   background-color: white;
   z-index: 5;
-  transition: transform 1s;
-  transform: ${({ isOpened }) =>
-    isOpened ? 'transform: translateX(0px)' : 'translateX(320px)'};
+  transition: transform 1s, opacity 1s;
+  transform: ${({ profileOpened }) =>
+    profileOpened ? 'translateX(0px)' : 'translateX(580px)'};
 `;
 
 const Close = styled.span`
@@ -81,7 +81,7 @@ const Close = styled.span`
 const User = styled.div`
   border-bottom: solid 1px #ddd;
   text-align: center;
-  padding: 30px;
+  padding: 0px 30px 30px 30px;
   width: 270px;
   div {
     :nth-child(2) {

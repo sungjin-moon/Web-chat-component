@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const MyMessage = ({ _setIsOpened }) => {
+function MyMessage({ _setProfile }) {
   return (
     <Box>
       <Wrapper>
@@ -11,11 +11,11 @@ const MyMessage = ({ _setIsOpened }) => {
         <Date>9m</Date>
       </Wrapper>
       <div className="wrapper">
-        <UserImg onClick={() => _setIsOpened(true)} />
+        <UserImg onClick={() => _setProfile(true)} />
       </div>
     </Box>
   );
-};
+}
 
 const Box = styled.div`
   margin-bottom: 20px;

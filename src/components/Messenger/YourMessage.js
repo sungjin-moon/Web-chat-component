@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const YourMessage = ({_setIsOpened}) => {
+function YourMessage({_setProfile}) {
   return (
     <Box>
-      <UserImg onClick={() => _setIsOpened(true)}/>
+      <UserImg onClick={() => _setProfile(true)}/>
       <Wrapper>
         <Text>
           Hey, can I connect with someone about pricing for Enterprise plans?
