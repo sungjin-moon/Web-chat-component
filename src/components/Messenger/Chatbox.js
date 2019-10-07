@@ -1,17 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import YourMessage from './YourMessage';
 import MyMessage from './MyMessage';
 
-function Chatbox({ chatboxOpened, profileOpened, _setProfile }) {
+function useInput(_updateMessageList) {
+  const [message, _setMessage] = useState('');
+
+  const _handleChange = event => {
+    return _setMessage(event.target.value);
+  };
+
+  const _handleKeyPress = event => {
+    if (event.keyCode === 13) {
+      _updateMessageList(message);
+      _setMessage('');
+    }
+  };
+
+  return {
+    message,
+    _handleChange,
+    _handleKeyPress
+  };
+}
+
+function Chatbox({
+  chatboxOpened,
+  profileOpened,
+  messageList,
+  _setProfile,
+  _updateMessageList
+}) {
+  const { message, _handleChange, _handleKeyPress } = useInput(
+    _updateMessageList
+  );
   return (
     <Container chatboxOpened={chatboxOpened} profileOpened={profileOpened}>
       <Head>Emily Gilmore</Head>
       <Body>
-        <YourMessage _setProfile={_setProfile} />
-        <MyMessage _setProfile={_setProfile} />
-        <YourMessage _setProfile={_setProfile} />
-        <MyMessage _setProfile={_setProfile} />
+        {messageList.map((item, id) => {
+          if (item.type === 'A') {
+            return (
+              <YourMessage
+                message={item.message}
+                key={id}
+                _setProfile={_setProfile}
+              />
+            );
+          } else if (item.type === 'B') {
+            return (
+              <MyMessage
+                message={item.message}
+                key={id}
+                _setProfile={_setProfile}
+              />
+            );
+          } else {
+            return null;
+          }
+        })}
       </Body>
       <Bottom>
         <UserInput>
@@ -20,6 +67,10 @@ function Chatbox({ chatboxOpened, profileOpened, _setProfile }) {
             name="message"
             cols="30"
             rows="1"
+            value={message}
+            onChange={_handleChange}
+            // onKeyPress={_handleKeyPress}
+            onKeyDown={_handleKeyPress}
           ></textarea>
           {/* <div id="send">
             <i class="fas fa-location-arrow"></i>
@@ -41,7 +92,9 @@ const Container = styled.div`
   z-index: 5;
   transition: opacity 0.15s linear, transform 1s;
   transform: ${({ profileOpened }) =>
-    profileOpened ? 'translateX(-100px) scale(0.9)' : 'translateX (0px) scale(1)'};
+    profileOpened
+      ? 'translateX(-100px) scale(0.9)'
+      : 'translateX (0px) scale(1)'};
 `;
 
 const Head = styled.div`

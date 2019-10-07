@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function MyMessage({ _setProfile }) {
+function MyMessage({message, _setProfile }) {
   return (
     <Box>
       <Wrapper>
         <Text>
-          Hi Emily, Dan here from the Enterprise accounts team. How can I help?
+          {message}
         </Text>
         <Date>9m</Date>
       </Wrapper>

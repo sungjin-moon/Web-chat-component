@@ -1,13 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function YourMessage({_setProfile}) {
+function YourMessage({message, _setProfile}) {
   return (
     <Box>
       <UserImg onClick={() => _setProfile(true)}/>
       <Wrapper>
         <Text>
-          Hey, can I connect with someone about pricing for Enterprise plans?
+          {message}
         </Text>
         <Date>9m</Date>
       </Wrapper>
