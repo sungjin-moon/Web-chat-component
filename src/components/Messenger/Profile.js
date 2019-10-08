@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function Profile({ profileOpened, _setProfile }) {
+function Profile({ type, profileOpened, _setProfile }) {
   return (
     <Container profileOpened={profileOpened}>
       <div className="profile-close">
@@ -9,31 +9,19 @@ function Profile({ profileOpened, _setProfile }) {
       </div>
       <User>
         <div>
-          <UserImg border="#f2cb30" background="#f9d954" line="3px" />
+          <UserImg type={type} line="3px" />
         </div>
-        <div>Emily Gilmore</div>
+        <div>{type}</div>
         <button>User</button>
       </User>
       <Latest>
         <div>Latest Conversations</div>
         <div className="latest-wrapper">
-          <UserImg
-            width="20px"
-            height="20px"
-            border="#3e56f2"
-            background="#5266f7"
-            line="2px"
-          />
+          <UserImg width="20px" height="20px" line="2px" />
           <div>fasfasfasf</div>
         </div>
         <div className="latest-wrapper">
-          <UserImg
-            width="20px"
-            height="20px"
-            border="red"
-            background="#f74747"
-            line="2px"
-          />
+          <UserImg width="20px" height="20px" line="2px" />
           <div>qwfasasg</div>
         </div>
       </Latest>
@@ -54,7 +42,7 @@ function Profile({ profileOpened, _setProfile }) {
       </Details>
     </Container>
   );
-};
+}
 
 const Container = styled.div`
   opacity: ${({ profileOpened }) => (profileOpened ? 1 : 0)};
@@ -103,11 +91,27 @@ const User = styled.div`
 
 const UserImg = styled.div`
   display: inline-block;
-  border: solid ${({ line }) => line} ${({ border }) => border};
+  border: solid ${({ line }) => line} ${({ type }) => {
+      if (type === 'User') {
+        return '#f2cb30';
+      } else if (type === 'Budy') {
+        return '#3e56f2';
+      } else {
+        return 'red';
+      }
+    }};
   border-radius: 50%;
   width: ${({ width }) => (width ? width : '50px')};
   height: ${({ height }) => (height ? height : '50px')};
-  background-color: ${({ background }) => background};
+  background-color: ${({ type }) => {
+    if (type === 'User') {
+      return '#f9d954';
+    } else if (type === 'Budy') {
+      return '#5266f7';
+    } else {
+      return '#f74747';
+    }
+  }};
   margin: 0;
 `;
 

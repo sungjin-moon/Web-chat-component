@@ -31,22 +31,21 @@ function useToggle() {
 function useRoom() {
   const [messageList, _setMessageList] = useState([]);
   const ref = useRef(false);
+  const body = useRef(null);
 
   useEffect(() => {
     const room = firebase.db.collection('rooms').doc('room');
 
     room.onSnapshot(querySnapshot => {
-      console.log('snapshot');
-      console.log(ref.current);
       const response = querySnapshot.data();
-      if (ref.current) {
-        const lastData = response.lastData;
-        console.log(lastData);
-        _setMessageList(oldArray => [...oldArray, lastData]);
-      } else {
+      // if (ref.current) {
+      //   const lastData = response.lastData;
+      //   _setMessageList(oldArray => [...oldArray, lastData]);
+      // } else {
         const totalData = response.messageList;
         _setMessageList(totalData);
-      }
+        body.current.scrollIntoView({ behavior: "smooth" })
+      // }
 
       ref.current = true;
     });
@@ -59,7 +58,7 @@ function useRoom() {
     const res = await room.get();
     const getMessageList = res.data().messageList;
     const data = {
-      type: 'B',
+      type: 'User',
       message: newMessage
     };
 
@@ -71,13 +70,15 @@ function useRoom() {
 
   return {
     messageList,
+    body,
     _updateMessageList
   };
 }
 
 function Messenger() {
   const { chatboxOpened, profileOpened, _setProfile, _toggle } = useToggle();
-  const { messageList, _updateMessageList } = useRoom();
+  const { messageList, body, _updateMessageList } = useRoom();
+  const [type, _setType] = useState(null);
 
   return (
     <React.Fragment>
@@ -85,10 +86,16 @@ function Messenger() {
         chatboxOpened={chatboxOpened}
         profileOpened={profileOpened}
         messageList={messageList}
+        body={body}
         _setProfile={_setProfile}
         _updateMessageList={_updateMessageList}
+        _setType={_setType}
       />
-      <Profile profileOpened={profileOpened} _setProfile={_setProfile} />
+      <Profile
+        type={type}
+        profileOpened={profileOpened}
+        _setProfile={_setProfile}
+      />
       <ToggleBtn chatboxOpened={chatboxOpened} _toggle={_toggle} />
     </React.Fragment>
   );

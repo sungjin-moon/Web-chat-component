@@ -28,31 +28,36 @@ function Chatbox({
   chatboxOpened,
   profileOpened,
   messageList,
+  body,
   _setProfile,
-  _updateMessageList
+  _updateMessageList,
+  _setType
 }) {
   const { message, _handleChange, _handleKeyPress } = useInput(
-    _updateMessageList
+    _updateMessageList,
   );
+
   return (
     <Container chatboxOpened={chatboxOpened} profileOpened={profileOpened}>
-      <Head>Emily Gilmore</Head>
-      <Body>
+      <Head>User</Head>
+      <Body ref={body}>
         {messageList.map((item, id) => {
-          if (item.type === 'A') {
+          if (item.type === 'Budy') {
             return (
               <YourMessage
                 message={item.message}
                 key={id}
                 _setProfile={_setProfile}
+                _setType={_setType}
               />
             );
-          } else if (item.type === 'B') {
+          } else if (item.type === 'User') {
             return (
               <MyMessage
                 message={item.message}
                 key={id}
                 _setProfile={_setProfile}
+                _setType={_setType}
               />
             );
           } else {

@@ -1,17 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function MyMessage({message, _setProfile }) {
+function MyMessage({ message, _setProfile, _setType }) {
   return (
     <Box>
       <Wrapper>
-        <Text>
-          {message}
-        </Text>
+        <Text>{message}</Text>
         <Date>9m</Date>
       </Wrapper>
       <div className="wrapper">
-        <UserImg onClick={() => _setProfile(true)} />
+        <UserImg
+          onClick={() => {
+            _setProfile(true);
+            _setType('User');
+          }}
+        />
       </div>
     </Box>
   );
@@ -30,12 +33,12 @@ const Box = styled.div`
 
 const UserImg = styled.div`
   cursor: pointer;
-  border: solid 3px #3e56f2;
+  border: solid 3px #f2cb30;
   border-radius: 50%;
   width: 30px;
   height: 30px;
   margin-bottom: 10px;
-  background-color: #5266f7;
+  background-color: #f9d954;
 `;
 
 const Wrapper = styled.div`
