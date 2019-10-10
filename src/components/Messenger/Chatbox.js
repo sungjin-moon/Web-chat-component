@@ -3,8 +3,24 @@ import styled from 'styled-components';
 import YourMessage from './YourMessage';
 import MyMessage from './MyMessage';
 
+import dialogflow from '../../dialogflow';
+const aiClient = dialogflow.client;
+
 function useInput(_updateMessageList) {
   const [message, _setMessage] = useState('');
+
+  const _sendAiClient = message => {
+    _updateMessageList(message, 'User');
+
+    aiClient
+      .textRequest(message)
+      .then(response => {
+        console.log(response);
+        const { speech } = response.result.fulfillment;
+        _updateMessageList(speech, 'Budy');
+      })
+      .catch(err => console.log(err));
+  };
 
   const _handleChange = event => {
     return _setMessage(event.target.value);
@@ -12,7 +28,7 @@ function useInput(_updateMessageList) {
 
   const _handleKeyPress = event => {
     if (event.keyCode === 13) {
-      _updateMessageList(message);
+      _sendAiClient(message);
       _setMessage('');
     }
   };
@@ -34,12 +50,12 @@ function Chatbox({
   _setType
 }) {
   const { message, _handleChange, _handleKeyPress } = useInput(
-    _updateMessageList,
+    _updateMessageList
   );
 
   return (
     <Container chatboxOpened={chatboxOpened} profileOpened={profileOpened}>
-      <Head>User</Head>
+      <Head>Budy</Head>
       <Body ref={body}>
         {messageList.map((item, id) => {
           if (item.type === 'Budy') {

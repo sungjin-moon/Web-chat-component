@@ -6,7 +6,7 @@ function MyMessage({ message, _setProfile, _setType }) {
     <Box>
       <Wrapper>
         <Text>{message}</Text>
-        <Date>9m</Date>
+        {/* <Date>9m</Date> */}
       </Wrapper>
       <div className="wrapper">
         <UserImg
@@ -47,17 +47,17 @@ const Wrapper = styled.div`
 
 const Text = styled.div`
   font-size: 14px;
-  background-color: #f7f5f7;
+  background-color: rgb(238, 241, 244);
   max-width: 270px;
   padding: 15px;
   border-radius: 5px;
 `;
 
-const Date = styled.div`
-  color: gray;
-  font-size: 12px;
-  margin-top: 3px;
-  text-align: end;
-`;
+// const Date = styled.div`
+//   color: gray;
+//   font-size: 12px;
+//   margin-top: 3px;
+//   text-align: end;
+// `;
 
 export default MyMessage;

@@ -4,6 +4,7 @@ import ToggleBtn from './ToggleBtn';
 import Profile from './Profile';
 
 import firebase from '../../firebase';
+const room = firebase.db.collection('rooms').doc('room');
 
 function useToggle() {
   const [chatboxOpened, _setChatbox] = useState(false);
@@ -34,17 +35,14 @@ function useRoom() {
   const body = useRef(null);
 
   useEffect(() => {
-    const room = firebase.db.collection('rooms').doc('room');
-
     room.onSnapshot(querySnapshot => {
       const response = querySnapshot.data();
       // if (ref.current) {
       //   const lastData = response.lastData;
       //   _setMessageList(oldArray => [...oldArray, lastData]);
       // } else {
-        const totalData = response.messageList;
-        _setMessageList(totalData);
-        body.current.scrollIntoView({ behavior: "smooth" })
+      const totalData = response.messageList;
+      _setMessageList(totalData);
       // }
 
       ref.current = true;
@@ -53,18 +51,17 @@ function useRoom() {
     return () => (ref.current = false);
   }, []);
 
-  const _updateMessageList = async newMessage => {
-    const room = firebase.db.collection('rooms').doc('room');
+  const _updateMessageList = async (newMessage, type) => {
     const res = await room.get();
     const getMessageList = res.data().messageList;
     const data = {
-      type: 'User',
+      type: type,
       message: newMessage
     };
 
     return room.update({
       messageList: getMessageList.concat(data),
-      lastData: data
+      lastMessage: data
     });
   };
 

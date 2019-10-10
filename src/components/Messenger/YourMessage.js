@@ -1,18 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
+const budyLogo = process.env.PUBLIC_URL + '/budy.jpeg'
 
 function YourMessage({ message, _setProfile, _setType }) {
   return (
     <Box>
-      <UserImg
-        onClick={() => {
-          _setProfile(true);
-          _setType('Budy');
-        }}
-      />
+      <div className="yourMessage-wrapper">
+        <UserImg
+          src={budyLogo}
+          onClick={() => {
+            _setProfile(true);
+            _setType('Budy');
+          }}
+        />
+        <div className="yourMessage-username">Budy</div>
+      </div>
+
       <Wrapper>
         <Text>{message}</Text>
-        <Date>9m</Date>
+        {/* <Date>9m</Date> */}
       </Wrapper>
     </Box>
   );
@@ -20,35 +26,41 @@ function YourMessage({ message, _setProfile, _setType }) {
 
 const Box = styled.div`
   margin-bottom: 20px;
-  display: flex;
+  .yourMessage-wrapper {
+    display: flex;
+    .yourMessage-username {
+      padding: 5px;
+    }
+  }
 `;
 
-const UserImg = styled.div`
+const UserImg = styled.img`
+  display: block;
   cursor: pointer;
-  border: solid 3px #3e56f2;
+  border: none;
   border-radius: 50%;
   width: 30px;
   height: 30px;
-  margin-top: 10px;
   background-color: #5266f7;
 `;
 
 const Wrapper = styled.div`
-  margin-left: 10px;
+  display: inline-block;
+  margin-left: 27px;
 `;
 
 const Text = styled.div`
   font-size: 14px;
-  background-color: #f7f5f7;
+  background-color: rgb(238, 241, 244);
   max-width: 270px;
   padding: 15px;
   border-radius: 5px;
 `;
 
-const Date = styled.div`
-  color: gray;
-  font-size: 12px;
-  margin-top: 3px;
-`;
+// const Date = styled.div`
+//   color: gray;
+//   font-size: 12px;
+//   margin-top: 3px;
+// `;
 
 export default YourMessage;
