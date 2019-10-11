@@ -103,6 +103,7 @@ function Chatbox({
 }
 
 const Container = styled.div`
+  border-radius: 5px;
   opacity: ${({ chatboxOpened }) => (chatboxOpened ? 1 : 0)};
   box-shadow: 0 7px 15px #999;
   position: absolute;
@@ -122,23 +123,26 @@ const Head = styled.div`
   padding: 20px;
   font-weight: 500;
   font-size: 18px;
-  background-color: #f9d954;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  color: white;
+  background-color: #298075;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 `;
 
 const Body = styled.div`
+  width: 375px;
   height: 400px;
   background-color: white;
   padding: 20px;
   overflow-y: scroll;
-  width: 450px;
   &::-webkit-scrollbar {
     display: none !important;
   }
 `;
 
 const Bottom = styled.div`
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
   background-color: white;
   padding: 30px 20px;
 `;

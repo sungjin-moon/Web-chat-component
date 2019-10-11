@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Home from './Home';
 import Chatbox from './Chatbox';
 import ToggleBtn from './ToggleBtn';
 import Profile from './Profile';
@@ -6,9 +7,27 @@ import Profile from './Profile';
 import firebase from '../../firebase';
 const room = firebase.db.collection('rooms').doc('room');
 
-function useToggle() {
+function useMessenger() {
+  const [type, _setType] = useState(null);
   const [chatboxOpened, _setChatbox] = useState(false);
   const [profileOpened, _setProfile] = useState(false);
+  const [notice, _setNotice] = useState(false);
+  const [messageList, _setMessageList] = useState([]);
+  const ref = useRef(false);
+  const body = useRef(null);
+
+  useEffect(() => {
+    setTimeout(() => _setNotice(true), 3000);
+
+    room.onSnapshot(querySnapshot => {
+      const response = querySnapshot.data();
+      const totalData = response.messageList;
+      _setMessageList(totalData);
+      ref.current = true;
+    });
+
+    return () => (ref.current = false);
+  }, []);
 
   const _toggle = init => {
     if (init) {
@@ -16,40 +35,10 @@ function useToggle() {
       _setProfile(false);
     } else {
       _setChatbox(true);
+      _setNotice(false);
     }
-
     return;
   };
-
-  return {
-    chatboxOpened,
-    profileOpened,
-    _setProfile,
-    _toggle
-  };
-}
-
-function useRoom() {
-  const [messageList, _setMessageList] = useState([]);
-  const ref = useRef(false);
-  const body = useRef(null);
-
-  useEffect(() => {
-    room.onSnapshot(querySnapshot => {
-      const response = querySnapshot.data();
-      // if (ref.current) {
-      //   const lastData = response.lastData;
-      //   _setMessageList(oldArray => [...oldArray, lastData]);
-      // } else {
-      const totalData = response.messageList;
-      _setMessageList(totalData);
-      // }
-
-      ref.current = true;
-    });
-
-    return () => (ref.current = false);
-  }, []);
 
   const _updateMessageList = async (newMessage, type) => {
     const res = await room.get();
@@ -66,20 +55,37 @@ function useRoom() {
   };
 
   return {
+    type,
+    chatboxOpened,
+    profileOpened,
     messageList,
     body,
+    notice,
+    _setProfile,
+    _setType,
+    _toggle,
     _updateMessageList
   };
 }
 
 function Messenger() {
-  const { chatboxOpened, profileOpened, _setProfile, _toggle } = useToggle();
-  const { messageList, body, _updateMessageList } = useRoom();
-  const [type, _setType] = useState(null);
+  const {
+    type,
+    chatboxOpened,
+    profileOpened,
+    messageList,
+    body,
+    notice,
+    _setType,
+    _setProfile,
+    _toggle,
+    _updateMessageList
+  } = useMessenger();
 
   return (
     <React.Fragment>
-      <Chatbox
+      <Home />
+      {/* <Chatbox
         chatboxOpened={chatboxOpened}
         profileOpened={profileOpened}
         messageList={messageList}
@@ -87,13 +93,13 @@ function Messenger() {
         _setProfile={_setProfile}
         _updateMessageList={_updateMessageList}
         _setType={_setType}
-      />
+      /> */}
       <Profile
         type={type}
         profileOpened={profileOpened}
         _setProfile={_setProfile}
       />
-      <ToggleBtn chatboxOpened={chatboxOpened} _toggle={_toggle} />
+      <ToggleBtn chatboxOpened={chatboxOpened} notice={notice} _toggle={_toggle} />
     </React.Fragment>
   );
 }

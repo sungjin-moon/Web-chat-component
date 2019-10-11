@@ -8,14 +8,14 @@ function MyMessage({ message, _setProfile, _setType }) {
         <Text>{message}</Text>
         {/* <Date>9m</Date> */}
       </Wrapper>
-      <div className="wrapper">
+      {/* <div className="wrapper">
         <UserImg
           onClick={() => {
             _setProfile(true);
             _setType('User');
           }}
         />
-      </div>
+      </div> */}
     </Box>
   );
 }
@@ -31,15 +31,15 @@ const Box = styled.div`
   }
 `;
 
-const UserImg = styled.div`
-  cursor: pointer;
-  border: solid 3px #f2cb30;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  margin-bottom: 10px;
-  background-color: #f9d954;
-`;
+// const UserImg = styled.div`
+//   cursor: pointer;
+//   border: solid 3px #f2cb30;
+//   border-radius: 50%;
+//   width: 30px;
+//   height: 30px;
+//   margin-bottom: 10px;
+//   background-color: #f9d954;
+// `;
 
 const Wrapper = styled.div`
   margin-right: 10px;
