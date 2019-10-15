@@ -41,10 +41,11 @@ function useInput(_updateMessageList) {
 }
 
 function Chatbox({
-  chatboxOpened,
   profileOpened,
   messageList,
   body,
+  view,
+  _setView,
   _setProfile,
   _updateMessageList,
   _setType
@@ -52,10 +53,16 @@ function Chatbox({
   const { message, _handleChange, _handleKeyPress } = useInput(
     _updateMessageList
   );
+  console.log(messageList);
 
   return (
-    <Container chatboxOpened={chatboxOpened} profileOpened={profileOpened}>
-      <Head>Budy</Head>
+    <Container view={view} profileOpened={profileOpened}>
+      <Head>
+        <div className="chatbox-leftBtn" onClick={() => _setView('home')}>
+          <i className="fas fa-angle-left"></i>
+        </div>
+        <div className="chatbox-title">Budy</div>
+      </Head>
       <Body ref={body}>
         {messageList.map((item, id) => {
           if (item.type === 'Budy') {
@@ -104,7 +111,7 @@ function Chatbox({
 
 const Container = styled.div`
   border-radius: 5px;
-  opacity: ${({ chatboxOpened }) => (chatboxOpened ? 1 : 0)};
+  display: ${({ view }) => (view === 'chatbox' ? 'block' : 'none')};
   box-shadow: 0 7px 15px #999;
   position: absolute;
   bottom: 122px;
@@ -120,6 +127,7 @@ const Container = styled.div`
 `;
 
 const Head = styled.div`
+  display: flex;
   padding: 20px;
   font-weight: 500;
   font-size: 18px;
@@ -127,6 +135,14 @@ const Head = styled.div`
   background-color: #298075;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  .chatbox-leftBtn {
+    font-size: 24px;
+    cursor: pointer;
+  }
+  .chatbox-title {
+    margin-left: 10px;
+    padding: 3px 0px;
+  }
 `;
 
 const Body = styled.div`

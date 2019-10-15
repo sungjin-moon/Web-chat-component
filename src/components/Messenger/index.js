@@ -5,42 +5,51 @@ import ToggleBtn from './ToggleBtn';
 import Profile from './Profile';
 
 import firebase from '../../firebase';
-const room = firebase.db.collection('rooms').doc('room');
 
 function useMessenger() {
+  const [toggle, _setToggle] = useState(false);
   const [type, _setType] = useState(null);
-  const [chatboxOpened, _setChatbox] = useState(false);
+  const [view, _setView] = useState(null);
   const [profileOpened, _setProfile] = useState(false);
   const [notice, _setNotice] = useState(false);
+  const [roomList, _setRoomList] = useState([]);
+  const [roomId, _setRoomId] = useState('bI9JtmifGY3SzWYtP09F');
   const [messageList, _setMessageList] = useState([]);
   const ref = useRef(false);
   const body = useRef(null);
 
   useEffect(() => {
+    setTimeout(() => _setToggle(true), 2000);
     setTimeout(() => _setNotice(true), 3000);
 
-    room.onSnapshot(querySnapshot => {
-      const response = querySnapshot.data();
-      const totalData = response.messageList;
-      _setMessageList(totalData);
-      ref.current = true;
+    //rooms
+    const rooms = firebase.db.collection('rooms');
+    rooms.onSnapshot(res => {
+      const result = [];
+      res.forEach(doc => {
+        result.push({
+          roomId: doc.id,
+          ...doc.data()
+        });
+      });
+
+      _setRoomList(result);
     });
+
+    //room
+    // const room = firebase.db.collection('rooms').doc(roomId);
+    // room.onSnapshot(querySnapshot => {
+    //   const response = querySnapshot.data();
+    //   const totalData = response.messageList;
+    //   _setMessageList(totalData);
+    //   ref.current = true;
+    // });
 
     return () => (ref.current = false);
   }, []);
 
-  const _toggle = init => {
-    if (init) {
-      _setChatbox(false);
-      _setProfile(false);
-    } else {
-      _setChatbox(true);
-      _setNotice(false);
-    }
-    return;
-  };
-
   const _updateMessageList = async (newMessage, type) => {
+    const room = firebase.db.collection('rooms').doc(roomId);
     const res = await room.get();
     const getMessageList = res.data().messageList;
     const data = {
@@ -54,52 +63,95 @@ function useMessenger() {
     });
   };
 
+  useEffect(() => {
+    console.log(roomId);
+    // const room = firebase.db.collection('rooms').doc(roomId);
+    // room
+    //   .get()
+    //   .then(querySnapshot => {
+    //     const response = querySnapshot.data();
+    //     const totalData = response.messageList;
+    //     console.log(totalData);
+    //     _setMessageList(totalData);
+    //   })
+    //   .catch(err => console.log(err));
+
+    // const room = firebase.db.collection('rooms').doc(roomId);
+    // room.onSnapshot(querySnapshot => {
+    //   const response = querySnapshot.data();
+    //   const totalData = response.messageList;
+    //   _setMessageList(totalData);
+    //   ref.current = true;
+    // });
+  }, [roomId]);
+
   return {
+    toggle,
     type,
-    chatboxOpened,
     profileOpened,
     messageList,
     body,
     notice,
+    view,
+    roomList,
+    roomId,
+    _setRoomId,
+    _setView,
     _setProfile,
     _setType,
-    _toggle,
+    _setNotice,
     _updateMessageList
   };
 }
 
 function Messenger() {
   const {
+    toggle,
     type,
-    chatboxOpened,
     profileOpened,
     messageList,
     body,
     notice,
+    view,
+    roomList,
+    roomId,
+    _setRoomId,
+    _setView,
     _setType,
     _setProfile,
-    _toggle,
+    _setNotice,
     _updateMessageList
   } = useMessenger();
-
   return (
     <React.Fragment>
-      <Home />
-      {/* <Chatbox
-        chatboxOpened={chatboxOpened}
+      <Home
+        view={view}
+        roomList={roomList}
+        _setView={_setView}
+        _setRoomId={_setRoomId}
+      />
+      <Chatbox
         profileOpened={profileOpened}
         messageList={messageList}
         body={body}
+        view={view}
+        _setView={_setView}
         _setProfile={_setProfile}
         _updateMessageList={_updateMessageList}
         _setType={_setType}
-      /> */}
+      />
       <Profile
         type={type}
         profileOpened={profileOpened}
         _setProfile={_setProfile}
       />
-      <ToggleBtn chatboxOpened={chatboxOpened} notice={notice} _toggle={_toggle} />
+      <ToggleBtn
+        toggle={toggle}
+        notice={notice}
+        view={view}
+        _setView={_setView}
+        _setNotice={_setNotice}
+      />
     </React.Fragment>
   );
 }

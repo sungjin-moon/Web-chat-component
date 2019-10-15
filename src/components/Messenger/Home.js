@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+const budyLogo = process.env.PUBLIC_URL + '/budy.jpeg';
 
-function Home() {
+function Home({ view, roomList, _setView, _setRoomId }) {
   return (
-    <Container>
+    <Container view={view}>
       <Head>
         <div>
           <i className="fab fa-bootstrap fa-3x"></i>
@@ -23,15 +24,34 @@ function Home() {
             <div className="collection-allView">See all</div>
           </div>
           <div className="collection-body">
-            <div className="collection-room">Room</div>
-            <div className="collection-room">Room</div>
+            {roomList.map((room, id) => (
+              <div
+                className="collection-room"
+                onClick={() => {
+                  _setView('chatbox');
+                  _setRoomId(room.roomId);
+                }}
+                key={id}
+              >
+                <div className="collection-room-wrapper">
+                  <img className="collection-room-img" src={budyLogo} alt="" />
+                  <div className="collection-room-text">
+                    <div className="collection-room-username">
+                      <div>{room.lastType}</div>
+                      <div>2d ago</div>
+                    </div>
+                    <div>{room.lastMessage.slice(0, 30)}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
           <div className="collection-bottom">
             <button>New conversation</button>
           </div>
         </Collection>
-        <Collection />
-        <Collection />
+        <Collection></Collection>
+        <Collection></Collection>
       </Body>
       <Bottom>
         <i className="fab fa-bootstrap"></i>
@@ -42,6 +62,7 @@ function Home() {
 }
 
 const Container = styled.div`
+  display: ${({ view }) => (view === 'home' ? 'block' : 'none')};
   position: relative;
   border-radius: 5px;
   box-shadow: 0 7px 15px #999;
@@ -50,9 +71,9 @@ const Container = styled.div`
   right: 100px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  z-index: 5;
+  z-index: 6;
   width: 375px;
-  height: 600px;
+  min-height: 598px;
   background-color: #f9f9f9;
 `;
 
@@ -125,9 +146,32 @@ const Collection = styled.div`
     }
   }
   .collection-room {
-    border-bottom: solid 1px #ddd;
-    padding: 20px 0px;
-    margin: 0px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    :hover {
+      background-color: #f9f9f9;
+    }
+    .collection-room-wrapper {
+      border-bottom: solid 1px #ddd;
+      padding: 15px 0px;
+      margin: 0px 20px;
+      display: flex;
+      .collection-room-img {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+      }
+      .collection-room-text {
+        padding-left: 16px;
+        flex: 1 1 0%;
+        .collection-room-username {
+          display: flex;
+          justify-content: space-between;
+          color: rgb(115, 115, 118);
+          padding-bottom: 5px;
+        }
+      }
+    }
   }
   .collection-bottom {
     margin: 0px 20px;
@@ -138,6 +182,8 @@ const Collection = styled.div`
       border-radius: 30px;
       color: #37c6b3;
       padding: 10px;
+      cursor: pointer;
+      outline: none;
     }
   }
 `;

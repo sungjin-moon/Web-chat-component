@@ -1,19 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function ToggleBtn({ chatboxOpened, notice, _toggle }) {
+function ToggleBtn({ toggle, notice, view, _setView, _setNotice }) {
   return (
     <Wrapper>
       <NoticeBubble notice={notice}>Please ask any questions!</NoticeBubble>
-      <div className="toggleBtn-wrapper">
-        <Button onClick={() => _toggle(chatboxOpened)}>
-          {chatboxOpened ? (
-            <i className="fas fa-times"></i>
+      {toggle && (
+        <div className="toggleBtn-wrapper">
+          {view === null ? (
+            <Button
+              onClick={() => {
+                _setView('home');
+                _setNotice(false);
+              }}
+            >
+              <i className="fas fa-sticky-note"></i>
+            </Button>
           ) : (
-            <i className="fas fa-sticky-note"></i>
+            <Button onClick={() => _setView(null)}>
+              <i className="fas fa-times"></i>
+            </Button>
           )}
-        </Button>
-      </div>
+        </div>
+      )}
     </Wrapper>
   );
 }

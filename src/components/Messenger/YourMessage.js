@@ -41,7 +41,6 @@ const UserImg = styled.img`
   border-radius: 50%;
   width: 30px;
   height: 30px;
-  background-color: #5266f7;
 `;
 
 const Wrapper = styled.div`
