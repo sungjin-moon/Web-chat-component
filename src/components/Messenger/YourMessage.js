@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 const budyLogo = process.env.PUBLIC_URL + '/budy.jpeg'
 
-function YourMessage({ message, _setProfile, _setType }) {
+function YourMessage({ message, view, _setProfile, _setType }) {
   return (
     <Box>
       <div className="yourMessage-wrapper">
@@ -17,7 +17,7 @@ function YourMessage({ message, _setProfile, _setType }) {
       </div>
 
       <Wrapper>
-        <Text>{message}</Text>
+        <Text view={view}>{message}</Text>
         {/* <Date>9m</Date> */}
       </Wrapper>
     </Box>
@@ -50,7 +50,8 @@ const Wrapper = styled.div`
 
 const Text = styled.div`
   font-size: 14px;
-  background-color: rgb(238, 241, 244);
+  background-color: ${({ view }) =>
+    view === 'chatbox-dark' ? 'white' : 'rgb(238, 241, 244)'};
   max-width: 270px;
   padding: 15px;
   border-radius: 5px;

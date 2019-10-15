@@ -6,18 +6,21 @@ import MyMessage from './MyMessage';
 import dialogflow from '../../dialogflow';
 const aiClient = dialogflow.client;
 
-function useInput(_updateMessageList) {
+function useInput(_updateMessageList, _setNoticeCount, _setView) {
   const [message, _setMessage] = useState('');
 
   const _sendAiClient = message => {
     _updateMessageList(message, 'User');
-
     aiClient
       .textRequest(message)
       .then(response => {
         console.log(response);
         const { speech } = response.result.fulfillment;
-        _updateMessageList(speech, 'Budy');
+        setTimeout(() => {
+          _updateMessageList(speech, 'Budy');
+          _setNoticeCount(prevNoticeCount => prevNoticeCount + 1);
+          _setView('chatbox-dark');
+        }, 10000);
       })
       .catch(err => console.log(err));
   };
@@ -45,31 +48,41 @@ function Chatbox({
   messageList,
   body,
   view,
+  _setRoomId,
   _setView,
   _setProfile,
   _updateMessageList,
-  _setType
+  _setType,
+  _setNoticeCount
 }) {
   const { message, _handleChange, _handleKeyPress } = useInput(
-    _updateMessageList
+    _updateMessageList,
+    _setNoticeCount,
+    _setView,
   );
-  console.log(messageList);
 
   return (
     <Container view={view} profileOpened={profileOpened}>
-      <Head>
-        <div className="chatbox-leftBtn" onClick={() => _setView('home')}>
+      <Head view={view}>
+        <div
+          className="chatbox-leftBtn"
+          onClick={() => {
+            _setView('home');
+            _setRoomId(null);
+          }}
+        >
           <i className="fas fa-angle-left"></i>
         </div>
         <div className="chatbox-title">Budy</div>
       </Head>
-      <Body ref={body}>
+      <Body ref={body} view={view}>
         {messageList.map((item, id) => {
           if (item.type === 'Budy') {
             return (
               <YourMessage
                 message={item.message}
                 key={id}
+                view={view}
                 _setProfile={_setProfile}
                 _setType={_setType}
               />
@@ -79,6 +92,7 @@ function Chatbox({
               <MyMessage
                 message={item.message}
                 key={id}
+                view={view}
                 _setProfile={_setProfile}
                 _setType={_setType}
               />
@@ -88,7 +102,7 @@ function Chatbox({
           }
         })}
       </Body>
-      <Bottom>
+      <Bottom view={view}>
         <UserInput>
           <textarea
             className="chatbox-text"
@@ -111,8 +125,10 @@ function Chatbox({
 
 const Container = styled.div`
   border-radius: 5px;
-  display: ${({ view }) => (view === 'chatbox' ? 'block' : 'none')};
-  box-shadow: 0 7px 15px #999;
+  display: ${({ view }) =>
+    view === 'chatbox' || view === 'chatbox-dark' ? 'block' : 'none'};
+  box-shadow: ${({ view }) =>
+    view === 'chatbox-dark' ? 'none' : '0 7px 15px #999'};
   position: absolute;
   bottom: 122px;
   right: 100px;
@@ -132,7 +148,8 @@ const Head = styled.div`
   font-weight: 500;
   font-size: 18px;
   color: white;
-  background-color: #298075;
+  background-color: ${({ view }) =>
+    view === 'chatbox-dark' ? 'none' : '#298075'};
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   .chatbox-leftBtn {
@@ -147,8 +164,10 @@ const Head = styled.div`
 
 const Body = styled.div`
   width: 375px;
-  height: 400px;
-  background-color: white;
+  height: ${({ view }) =>
+    view === 'chatbox-dark' ? '260px' : '400px'};
+  background-color: ${({ view }) =>
+    view === 'chatbox-dark' ? 'none' : 'white'};
   padding: 20px;
   overflow-y: scroll;
   &::-webkit-scrollbar {
@@ -159,7 +178,8 @@ const Body = styled.div`
 const Bottom = styled.div`
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  background-color: white;
+  background-color: ${({ view }) =>
+    view === 'chatbox-dark' ? 'none' : 'white'};
   padding: 30px 20px;
 `;
 

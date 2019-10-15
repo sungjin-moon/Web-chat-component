@@ -1,8 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 const budyLogo = process.env.PUBLIC_URL + '/budy.jpeg';
 
-function Home({ view, roomList, _setView, _setRoomId }) {
+function Home({
+  view,
+  roomList,
+  _setView,
+  _setRoomId,
+  _createRoom,
+  _deleteRoom
+}) {
   return (
     <Container view={view}>
       <Head>
@@ -25,33 +32,39 @@ function Home({ view, roomList, _setView, _setRoomId }) {
           </div>
           <div className="collection-body">
             {roomList.map((room, id) => (
-              <div
-                className="collection-room"
-                onClick={() => {
-                  _setView('chatbox');
-                  _setRoomId(room.roomId);
-                }}
-                key={id}
-              >
-                <div className="collection-room-wrapper">
+              <div className="collection-room" key={id}>
+                <div
+                  className="collection-room-wrapper"
+                  onClick={() => {
+                    _setView('chatbox');
+                    _setRoomId(room.roomId);
+                  }}
+                />
+
+                <div className="collection-room-box">
                   <img className="collection-room-img" src={budyLogo} alt="" />
                   <div className="collection-room-text">
                     <div className="collection-room-username">
-                      <div>{room.lastType}</div>
-                      <div>2d ago</div>
+                      <div>{room.messageList[room.messageList.length-1].type}</div>
+                      <div
+                        id="room-delete"
+                        onClick={() => _deleteRoom(room.roomId)}
+                      >
+                        Delete
+                      </div>
                     </div>
-                    <div>{room.lastMessage.slice(0, 30)}</div>
+                    <div>{room.messageList[room.messageList.length-1].message.slice(0, 30)}</div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
           <div className="collection-bottom">
-            <button>New conversation</button>
+            <button onClick={_createRoom}>New conversation</button>
           </div>
         </Collection>
-        <Collection></Collection>
-        <Collection></Collection>
+        <Temp></Temp>
+        <Temp></Temp>
       </Body>
       <Bottom>
         <i className="fab fa-bootstrap"></i>
@@ -148,10 +161,18 @@ const Collection = styled.div`
   .collection-room {
     font-size: 14px;
     cursor: pointer;
+    position: relative;
     :hover {
       background-color: #f9f9f9;
     }
     .collection-room-wrapper {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+    }
+    .collection-room-box {
       border-bottom: solid 1px #ddd;
       padding: 15px 0px;
       margin: 0px 20px;
@@ -169,6 +190,14 @@ const Collection = styled.div`
           justify-content: space-between;
           color: rgb(115, 115, 118);
           padding-bottom: 5px;
+          #room-delete {
+            position: relative;
+            z-index: 10;
+            cursor: pointer;
+            :hover {
+              color: #3bb5a4;
+            }
+          }
         }
       }
     }
@@ -186,5 +215,14 @@ const Collection = styled.div`
       outline: none;
     }
   }
+`;
+
+const Temp = styled.div`
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 7px 15px #999;
+  border-top: solid 3px #37c6b3;
+  margin-bottom: 20px;
+  height: 300px;
 `;
 export default Home;

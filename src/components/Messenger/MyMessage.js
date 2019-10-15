@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function MyMessage({ message, _setProfile, _setType }) {
+function MyMessage({ view, message, _setProfile, _setType }) {
   return (
     <Box>
       <Wrapper>
-        <Text>{message}</Text>
+        <Text view={view}>{message}</Text>
         {/* <Date>9m</Date> */}
       </Wrapper>
       {/* <div className="wrapper">
@@ -47,7 +47,8 @@ const Wrapper = styled.div`
 
 const Text = styled.div`
   font-size: 14px;
-  background-color: rgb(238, 241, 244);
+  background-color: ${({ view }) =>
+    view === 'chatbox-dark' ? 'white' : 'rgb(238, 241, 244)'};
   max-width: 270px;
   padding: 15px;
   border-radius: 5px;

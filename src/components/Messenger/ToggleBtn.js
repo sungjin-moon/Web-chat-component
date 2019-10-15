@@ -1,17 +1,31 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function ToggleBtn({ toggle, notice, view, _setView, _setNotice }) {
+function ToggleBtn({
+  toggle,
+  notice,
+  view,
+  noticeCount,
+  _setView,
+  _setNotice,
+  _setNoticeCount
+}) {
   return (
     <Wrapper>
-      <NoticeBubble notice={notice}>Please ask any questions!</NoticeBubble>
+      <NoticeMessage notice={notice}>Please ask any questions!</NoticeMessage>
       {toggle && (
         <div className="toggleBtn-wrapper">
-          {view === null ? (
+          {noticeCount > 0 ? <NoticeCount>{noticeCount}</NoticeCount> : null}
+          {view === null || view === 'chatbox-dark' ? (
             <Button
               onClick={() => {
-                _setView('home');
+                if (view === 'chatbox-dark') {
+                  _setView('chatbox');
+                } else {
+                  _setView('home');
+                }
                 _setNotice(false);
+                _setNoticeCount(0);
               }}
             >
               <i className="fas fa-sticky-note"></i>
@@ -37,7 +51,21 @@ const Wrapper = styled.div`
   }
 `;
 
-const NoticeBubble = styled.div`
+const NoticeCount = styled.div`
+  background-color: red;
+  -webkit-border-radius: 4px;
+  border-radius: 50%;
+  font-size: 1rem;
+  padding: 6px 10px 6px 10px;
+  position: absolute;
+  right: 18px;
+  top: 44px;
+  color: white;
+  width: 30px;
+  height: 30px;
+`;
+
+const NoticeMessage = styled.div`
   opacity: ${({ notice }) => (notice ? 1 : 0)};
   ::after {
     border-left: 12px solid transparent;
