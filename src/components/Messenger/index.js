@@ -5,6 +5,8 @@ import ToggleBtn from './ToggleBtn';
 import Profile from './Profile';
 
 import firebase from '../../firebase';
+import dialogflow from '../../dialogflow';
+const aiClient = dialogflow.client;
 
 function useMessenger() {
   const [toggle, _setToggle] = useState(false);
@@ -103,6 +105,27 @@ function useMessenger() {
       .delete();
   };
 
+  const _sendAiClient = message => {
+    _updateMessageList(message, 'User');
+    aiClient
+      .textRequest(message)
+      .then(response => {
+        console.log(response);
+        const { speech } = response.result.fulfillment;
+        setTimeout(() => {
+          _updateMessageList(speech, 'Budy');
+          _setView(prevView => {
+            if (prevView === null) {
+              _setNoticeCount(prevNoticeCount => prevNoticeCount + 1);
+              return 'chatbox-dark';
+            };
+            return 'chatbox'
+          });
+        }, 10000);
+      })
+      .catch(err => console.log(err));
+  };
+
   return {
     toggle,
     type,
@@ -114,6 +137,7 @@ function useMessenger() {
     roomList,
     roomId,
     noticeCount,
+    _setMessageList,
     _setNoticeCount,
     _setRoomId,
     _setView,
@@ -122,7 +146,8 @@ function useMessenger() {
     _setNotice,
     _updateMessageList,
     _createRoom,
-    _deleteRoom
+    _deleteRoom,
+    _sendAiClient
   };
 }
 
@@ -138,6 +163,7 @@ function Messenger() {
     roomList,
     noticeCount,
     roomId,
+    _setMessageList,
     _setNoticeCount,
     _setRoomId,
     _setView,
@@ -146,7 +172,8 @@ function Messenger() {
     _setNotice,
     _updateMessageList,
     _createRoom,
-    _deleteRoom
+    _deleteRoom,
+    _sendAiClient
   } = useMessenger();
   return (
     <React.Fragment>
@@ -170,6 +197,8 @@ function Messenger() {
         _updateMessageList={_updateMessageList}
         _setType={_setType}
         _setNoticeCount={_setNoticeCount}
+        _setMessageList={_setMessageList}
+        _sendAiClient={_sendAiClient}
       />
       <Profile
         type={type}

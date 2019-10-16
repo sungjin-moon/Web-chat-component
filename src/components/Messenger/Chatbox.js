@@ -3,27 +3,8 @@ import styled from 'styled-components';
 import YourMessage from './YourMessage';
 import MyMessage from './MyMessage';
 
-import dialogflow from '../../dialogflow';
-const aiClient = dialogflow.client;
-
-function useInput(_updateMessageList, _setNoticeCount, _setView) {
+function useInput(_updateMessageList, _setNoticeCount, _setView, _sendAiClient) {
   const [message, _setMessage] = useState('');
-
-  const _sendAiClient = message => {
-    _updateMessageList(message, 'User');
-    aiClient
-      .textRequest(message)
-      .then(response => {
-        console.log(response);
-        const { speech } = response.result.fulfillment;
-        setTimeout(() => {
-          _updateMessageList(speech, 'Budy');
-          _setNoticeCount(prevNoticeCount => prevNoticeCount + 1);
-          _setView('chatbox-dark');
-        }, 10000);
-      })
-      .catch(err => console.log(err));
-  };
 
   const _handleChange = event => {
     return _setMessage(event.target.value);
@@ -53,22 +34,50 @@ function Chatbox({
   _setProfile,
   _updateMessageList,
   _setType,
-  _setNoticeCount
+  _setNoticeCount,
+  _setMessageList,
+  _sendAiClient
 }) {
   const { message, _handleChange, _handleKeyPress } = useInput(
     _updateMessageList,
     _setNoticeCount,
     _setView,
+    _sendAiClient
   );
 
   return (
     <Container view={view} profileOpened={profileOpened}>
       <Head view={view}>
+        {view === 'chatbox-dark' && (
+          <div
+            className="chatbox-dark-viewMore"
+            onClick={() => {
+              _setView('chatbox');
+              _setNoticeCount(0);
+            }}
+          >
+            View more
+          </div>
+        )}
+        {view === 'chatbox-dark' && (
+          <div
+            className="chatbox-dark-close"
+            onClick={() => {
+              _setView(null);
+              _setNoticeCount(0);
+              _setRoomId(null);
+              _setMessageList([]);
+            }}
+          >
+            X
+          </div>
+        )}
         <div
           className="chatbox-leftBtn"
           onClick={() => {
             _setView('home');
             _setRoomId(null);
+            _setMessageList([]);
           }}
         >
           <i className="fas fa-angle-left"></i>
@@ -144,6 +153,8 @@ const Container = styled.div`
 
 const Head = styled.div`
   display: flex;
+  justify-content: ${({ view }) =>
+    view === 'chatbox-dark' ? 'center' : 'none'};
   padding: 20px;
   font-weight: 500;
   font-size: 18px;
@@ -152,20 +163,53 @@ const Head = styled.div`
     view === 'chatbox-dark' ? 'none' : '#298075'};
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  position: relative;
+  :hover {
+    .chatbox-dark-viewMore {
+      opacity: 1;
+    }
+    .chatbox-dark-close {
+      opacity: 1;
+    }
+  }
   .chatbox-leftBtn {
+    display: ${({ view }) => (view !== 'chatbox-dark' ? 'block' : 'none')};
     font-size: 24px;
     cursor: pointer;
   }
   .chatbox-title {
+    display: ${({ view }) => (view !== 'chatbox-dark' ? 'block' : 'none')};
     margin-left: 10px;
     padding: 3px 0px;
+  }
+  .chatbox-dark-viewMore {
+    background-color: rgb(103, 120, 143);
+    border-radius: 16px;
+    font-size: 13px;
+    padding: 8px 20px;
+    font-weight: normal;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .chatbox-dark-close {
+    background-color: rgb(103, 120, 143);
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    right: 28px;
+    font-size: 13px;
+    border-radius: 50%;
+    padding: 8px 11px;
+    font-weight: normal;
+    margin-top: 2px;
+    opacity: 0;
+    cursor: pointer;
   }
 `;
 
 const Body = styled.div`
   width: 375px;
-  height: ${({ view }) =>
-    view === 'chatbox-dark' ? '260px' : '400px'};
+  height: ${({ view }) => (view === 'chatbox-dark' ? '260px' : '400px')};
   background-color: ${({ view }) =>
     view === 'chatbox-dark' ? 'none' : 'white'};
   padding: 20px;

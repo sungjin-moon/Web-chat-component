@@ -47,11 +47,13 @@ const Wrapper = styled.div`
 
 const Text = styled.div`
   font-size: 14px;
-  background-color: ${({ view }) =>
-    view === 'chatbox-dark' ? 'white' : 'rgb(238, 241, 244)'};
   max-width: 270px;
   padding: 15px;
   border-radius: 5px;
+  background-color: #298075;
+  color: white;
+  box-shadow: ${({ view }) =>
+    view === 'chatbox-dark' ? '1px 2px 6px #999' : 'none'};
 `;
 
 // const Date = styled.div`

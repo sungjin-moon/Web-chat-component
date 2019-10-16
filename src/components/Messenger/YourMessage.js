@@ -55,6 +55,8 @@ const Text = styled.div`
   max-width: 270px;
   padding: 15px;
   border-radius: 5px;
+  box-shadow: ${({ view }) =>
+    view === 'chatbox-dark' ? '1px 2px 6px #999' : 'none'};
 `;
 
 // const Date = styled.div`
